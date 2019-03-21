@@ -1,4 +1,9 @@
-
+<?php session_start()?>
+<?php if(isset($_SESSION['username'])){
+    header("Location: index.php");
+    exit();
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,11 +22,21 @@
 
   <body>
     <div class="form-wrapper text-center">
-    <form class="form-signin" action="login.php" method="post">
+        <form class="form-signin" action="login.php" method="post">
             <img class="mb-4" src="assets/img/bootstrap-solid.svg" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal">
                 Авторизация
             </h1>
+            <?php if(isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger">
+                <?=$_SESSION['error'];unset($_SESSION['error']); ?>
+            </div>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['success'])): ?>
+            <div class="alert alert-success">
+                <?=$_SESSION['success'];unset($_SESSION['success']); ?>
+            </div>
+            <?php endif; ?>
             <label for="inputEmail" class="sr-only">
                 Email
             </label>
@@ -43,7 +58,7 @@
                 Зарегистрироваться
             </a>
             <p class="mt-5 mb-3 text-muted">
-                &copy; 2018 - 2019
+                &copy; 2018 - <?=date("Y") ?>
             </p>
         </form>
     </div>
