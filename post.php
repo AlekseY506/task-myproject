@@ -45,7 +45,6 @@ if(!empty($_FILES['img']['tmp_name'])){
         header("Location: create-form.php");
         exit();
     }
-    $expensions = ["jpeg","jpg","png"];
     
     if (empty($_FILES['img']['error']) == trye){
         move_uploaded_file($f_tmp,"assets/img/".$f_name);
