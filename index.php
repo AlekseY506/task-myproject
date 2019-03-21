@@ -1,5 +1,15 @@
+<?php include_once 'db_connect.php'; ?>
+<?php if(!isset($_SESSION['username'])): ?>
+<?php header("Location: login-form.php"); exit();?>
+<?php else: ?>
+<?php
+$sql = "SELECT * FROM articles WHERE user_id=:user_id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':user_id' => $_SESSION['user_id']]);
+$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-<!doctype html>
+    <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -22,9 +32,9 @@
               <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
             </div>
             <div class="col-sm-4 offset-md-1 py-4">
-              <h4 class="text-white">john@example.com</h4>
+              <h4 class="text-white"><?=$_SESSION['username'];?></h4>
               <ul class="list-unstyled">
-                <li><a href="#" class="text-white">Выйти</a></li>
+                  <li><a href="logaut.php" class="text-white">Выйти</a></li>
               </ul>
             </div>
           </div>
@@ -50,152 +60,42 @@
           <h1 class="jumbotron-heading">Проект Task-manager</h1>
           <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
           <p>
-            <a href="#" class="btn btn-primary my-2">Добавить запись</a>
+              <a href="create-form.php" class="btn btn-primary my-2">Добавить запись</a>
           </p>
         </div>
       </section>
-
       <div class="album py-5 bg-light">
         <div class="container">
 
           <div class="row">
+             <?php foreach ($row as $values):?>
              <div class="col-md-4">
               <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
+                  <p style="margin-left: 20px"><?=$values['title']?></p>
+                <img class="card-img-top" src="assets/img/<?=$values['images']?>">
                 <div class="card-body">
-                  <p class="card-text">Lorem ipsum</p>
+                  <p class="card-text">
+                      <?php
+                        $text =  mb_substr($values['text'],0,200,'UTF-8');
+                        $text =  substr($text, 0);
+                        echo $text . ' ..... <a href="show.php?id=' . $values['id'] .  '"><b class="date">Далее</b></a>';
+                      ?>
+                      </p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Подробнее</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary" onclick="confirm('are you sure?')">Удалить</a>
+                        <a href="show.php?id=<?=$values['id']?>" class="btn btn-sm btn-outline-secondary">Полный текс</a>
+                      <a href="edit-form.php?id=<?=$values['id']?>" class="btn btn-sm btn-outline-secondary">Изменить</a>
+                      <a href="delete.php?id=<?=$values['id'] ?>" class="btn btn-sm btn-outline-secondary" onclick="confirm('are you sure?')">Удалить</a>
                     </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                      <span class="date"><?=$values['date']?></span>
                   </div>
                 </div>
               </div>
             </div>
-            <!--<div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" src="assets/img/no-image.jpg">
-                <div class="card-body">
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Изменить</a>
-                      <a href="#" class="btn btn-sm btn-outline-secondary">Удалить</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+            <?php endforeach;?>
+              <?php //var_dump($values)?>
           </div>
         </div>
       </div>
@@ -219,3 +119,5 @@
     <script src="assets/js/bootstrap.js"></script>
   </body>
 </html>
+
+<?php endif;?>
