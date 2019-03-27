@@ -1,8 +1,10 @@
 <?php session_start()?>
-<?php if(isset($_SESSION['username'])){
-    header("Location: index.php");
-    exit();
-}
+<?php
+    include_once 'libs/auth.php';
+    if(auth() != false){
+        header("Location: index.php");
+        exit();
+    }
 ?>
 <!doctype html>
 <html lang="en">
