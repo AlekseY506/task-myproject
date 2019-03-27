@@ -1,15 +1,15 @@
 <?php
 //подключение к бд через PDO
-include_once 'db_connect.php';
+include_once 'libs/db_connect.php';
+include_once 'libs/functions.php';
 //если нет сессии
-if(isset($_SESSION['username'])){
+if(auth() != false){
     header("Location: index.php");
     exit();
 }
 //массив POST с данными отправленные пользователем
 $data = $_POST;
 //проверяем массив данных на пустоту
-
 if (empty($date) == ""){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
     header("Location: login-form.php");
@@ -18,7 +18,7 @@ if (empty($date) == ""){
 
 //key дополнительная защита от подмены данных
 $attribute = [
-    'remember_me'    => '',
+    'remember_me'    => 'off',
     'name'     => '',
     'email'    => '',
     'password' => '',
@@ -42,7 +42,7 @@ if (($attribute['email'] == '') || ($attribute['password'] == '')){
 //если емаил введен верно тогда
 if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
     //запрос к Базе Данных
-    $sql = 'SELECT id, name, password FROM users WHERE email=:email';
+    $sql = 'SELECT id, name, password, email FROM users WHERE email=:email';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([":email" => $attribute['email']]);
     //получаем результат ввиде объекта
@@ -51,13 +51,14 @@ if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
         if ( password_verify($attribute['password'], $result->password)){
             $_SESSION['username'] = $result->name;
             $_SESSION['user_id'] = $result->id;
+            $_SESSION['auth'] = true;
             //если нужно запомнить пользователя
             if (isset($attribute['remember_me']) && $attribute['remember_me'] == 'on'){
                 //соль
                 $salt = time();
                 //хешируем соль + емаил , записываем в cokies 
                 //обновляем хеш и соль в бд
-                $hash = password_hash($salt.$attribute['email'], PASSWORD_DEFAULT);
+                $hash = htmlspecialchars(password_hash($salt.$attribute['email'], PASSWORD_DEFAULT));
                 setcookie("login", $hash, time()+ 3600 * 24 * 7);
                 //формируем запрос
                 $sql = 'UPDATE users SET hash=:hash, salt=:salt WHERE email=:email';

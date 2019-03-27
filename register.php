@@ -1,8 +1,9 @@
 <?php
 //подключение к бд через PDO
-include_once 'db_connect.php';
+include_once 'libs/db_connect.php';
+include_once 'libs/functions.php';
 //если пользователь авторизирован
-if(isset($_SESSION['username'])){
+if(auth() != false){
     header("Location: index.php");
     exit();
 }

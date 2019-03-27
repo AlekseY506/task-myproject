@@ -1,12 +1,14 @@
-<?php include_once 'db_connect.php'; ?>
-<?php if(!isset($_SESSION['username'])): ?>
-<?php header("Location: login-form.php"); exit();?>
-<?php else: ?>
-<?php
-$sql = "SELECT * FROM articles WHERE user_id=:user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':user_id' => $_SESSION['user_id']]);
-$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+<?php 
+    include_once 'libs/db_connect.php';
+    include_once 'libs/functions.php';
+    if(auth() != true):
+        header("Location: login-form.php");
+        exit();
+        else:
+        $sql = "SELECT * FROM articles WHERE user_id=:user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
     <!doctype html>

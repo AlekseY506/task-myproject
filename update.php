@@ -1,11 +1,12 @@
 <?php 
 //подключение к бд через PDO
-include_once 'db_connect.php';
-//если нет сессии
-if(!isset($_SESSION['username'])){
-    header("Location: index.php");
-    exit();
-}
+include_once 'libs/db_connect.php';
+    include_once 'libs/functions.php';
+    //если нет сессии
+    if(auth() != true){
+        header("Location: login-form.php.php");
+        exit();
+    }
 $data = $_POST;
 //проверяем массив данных на пустоту
 if (empty($date) == ""){

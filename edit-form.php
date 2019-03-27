@@ -1,6 +1,6 @@
 <?php
 //подключение к бд через PDO
-include_once 'db_connect.php';
+include_once 'libs/db_connect.php';
 //если пользователь не авторизирован
 if (!isset($_SESSION['username'])){
     header("Location: login-form.php");
