@@ -12,7 +12,7 @@ function auth(){
     //если сессии нет 
     if (!isset($_SESSION['auth'])){
         //если куки есть и он не пустой
-        if ((isset($_COOKIE['login'])) || ($_COOKIE['login']) != ""){
+        if (!empty($_COOKIE['login'])){
             $hash = rtrim(htmlspecialchars($_COOKIE['login']));
             //формируем запрос
             global $pdo;
