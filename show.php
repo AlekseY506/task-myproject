@@ -1,28 +1,23 @@
 <?php
     include_once 'libs/db_connect.php';
-    if (!isset($_SESSION['username'])){
-        header("Location: login-form.php");
-        exit();
+    include_once 'libs/functions.php';
+    if(!auth()){
+        redirect("login-form.php");
     }
-    if (!isset($_GET['id'])){
-        header("Location: index.php");
-        exit();
+    if (empty($_GET['id'])){
+        redirect("index.php");
     }
     $id = htmlspecialchars(rtrim($_GET['id']));
-    if ($id == ""){
-        header("Location: index.php");
-        exit();
-    }
     if (!is_numeric($id)){
-        header("Location: index.php");
-        exit();
+        redirect("index.php");
     }
     $sql = 'SELECT id, title, text, images, date FROM articles WHERE user_id = :user_id AND id = :id LIMIT 1';
     $stmt = $pdo->prepare($sql);
     $stmt->execute(["user_id" => $_SESSION['user_id'], ":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_OBJ);
-    
-    
+    if(!$result){
+        redirect("index.php");
+    }
 ?>
 
 <!doctype html>

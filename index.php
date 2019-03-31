@@ -1,7 +1,7 @@
 <?php 
     include_once 'libs/db_connect.php';
     include_once 'libs/functions.php';
-    if(auth() != true):
+    if(!auth()):
         header("Location: login-form.php");
         exit();
         else:

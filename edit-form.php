@@ -1,28 +1,21 @@
 <?php
 //подключение к бд через PDO
 include_once 'libs/db_connect.php';
+include_once 'libs/functions.php';
 //если пользователь не авторизирован
-if (!isset($_SESSION['username'])){
-    header("Location: login-form.php");
-    exit();
+if(!auth()){
+    redirect("index.php");
 }
 //если не передан id
-if (!isset($_GET['id'])){
-    header("Location: index.php");
-    exit();
+if (empty($_GET['id']) and !is_numeric($id)){
+    redirect("index.php");
 }
 
 //удалив пробелы в начали и конце строки и преобразуем спец символы в html сущности
 $id = htmlspecialchars(rtrim($_GET['id']));
-//проверяем на пустоту
-if ($id == ""){
-    header("Location: index.php");
-    exit();
-}
 //если не цифра
 if (!is_numeric($id)){
-    header("Location: index.php");
-    exit();
+    redirect("index.php");
 }
 //формируем запрос
 $sql = 'SELECT * FROM articles WHERE id=:id and user_id=:user_id';
@@ -30,6 +23,10 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([':id' => $id, ':user_id' => $_SESSION['user_id']]);
 //получаем результат ввиде объекта
 $articles = $stmt->fetch(PDO::FETCH_OBJ);
+//если совпадений нет
+if (!$articles){
+    redirect("create-form.php");
+}
 //для дальнейшей возможности манипулирования данными при редактировании
 //создаем сессии id и imaje
 $_SESSION['image'] = $articles->images;

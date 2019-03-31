@@ -3,16 +3,14 @@
 include_once 'libs/db_connect.php';
     include_once 'libs/functions.php';
     //если нет сессии
-    if(auth() != true){
-        header("Location: login-form.php.php");
-        exit();
+    if(!auth()){
+        redirect("login-form.php");
     }
 $data = $_POST;
 //проверяем массив данных на пустоту
 if (empty($date) == ""){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 }
 //key дополнительная защита от подмены данных
 $attribute = [
@@ -29,10 +27,9 @@ foreach ($attribute as $key => $value){
     $attribute[$key] = htmlspecialchars(rtrim($data[$key]));
 }
 //если attribute[key] пуст
-if (($attribute['title'] == '') || ($attribute['description'] == '')){
+if (($attribute['title'] == '') and ($attribute['description'] == '')){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: edit-form.php");
-    exit();
+    redirect("edit-form.php");
 }
 //если фаил передан
 if(!empty($_FILES['img']['tmp_name'])){
@@ -44,14 +41,12 @@ if(!empty($_FILES['img']['tmp_name'])){
     //проверяем наличие ошибок
     if (!empty($_FILES['img']['error'])){
         $_SESSION['errors'] = "Произошла ошибка загрузки";
-        header("Location: edit-form.php");
-        exit();
+        redirect("edit-form.php");
     }
     //допустимый размер файла
     if ($f_size > 8 * 1024 * 1024){
         $_SESSION['errors'] = "Пожалуйста выберите фаил размером не более 8 мб.";
-        header("Location: edit-form.php");
-        exit();
+        redirect("edit-form.php");
     }
     //$expensions = ["jpeg","jpg","png"]; не понятно как это можно использовать для проверки
     if (empty($_FILES['img']['error']) == true){
@@ -63,12 +58,10 @@ if(!empty($_FILES['img']['tmp_name'])){
         //если ошибка
         if (!$result){
             $_SESSION['errors'] = "При изменении записи произошла ошибка, пожалуйста попробуйте позже";
-            header("Location: edit-form.php");
-            exit();
+            redirect("edit-form.php");
         }
         //успех переадресовываем на главную
-        header("Location: index.php");
-        exit();
+        redirect("index.php");
     }
     
 }
@@ -79,10 +72,8 @@ $result = $stmt->execute([':title' => $attribute['title'], ':text' => $attribute
 //если ошибка
 if (!$result){
     $_SESSION['errors'] = "При изменении записи произошла ошибка, пожалуйста попробуйте позже";
-    header("Location: edit-form.php");
-    exit();
+    redirect("edit-form.php");
 }
 //успех переадресовываем на главную
-header("Location: index.php");
-exit();
+redirect("index.php");
 

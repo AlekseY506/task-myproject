@@ -1,9 +1,9 @@
 <?php
 
 include_once 'libs/db_connect.php';
-if(!isset($_SESSION['username'])){
-    header("Location: login-form.php");
-    exit();
+include_once 'libs/functions.php';
+if(!auth()){
+    redirect("login-form.php");
 }
 $data = $_POST;
 

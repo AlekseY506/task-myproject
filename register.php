@@ -3,7 +3,7 @@
 include_once 'libs/db_connect.php';
 include_once 'libs/functions.php';
 //если пользователь авторизирован
-if(auth() != false){
+if(auth()){
     header("Location: index.php");
     exit();
 }
@@ -34,7 +34,7 @@ foreach ($attribute as $key => $value){
 //если attribute[key] пуст
 if (($attribute['name'] == '') || ($attribute['email'] == '') || ($attribute['password'] == '')){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: register_form.php");
+    header("Location: register-form.php");
     exit();
 }
 //если емаил введен верно тогда

@@ -1,9 +1,8 @@
 <?php session_start()?>
 <?php
-    include_once 'libs/auth.php';
-    if(auth() != false){
-        header("Location: index.php");
-        exit();
+    include_once 'libs/functions.php';
+    if(auth()){
+        redirect("index.php");
     }
 ?>
 <!doctype html>
@@ -30,11 +29,6 @@
         <?php if(isset($_SESSION['error'])): ?>
             <div class="alert alert-danger">
                 <?=$_SESSION['error'];unset($_SESSION['error']); ?>
-            </div>
-        <?php endif; ?>
-        <?php if(isset($_SESSION['error'])): ?>
-            <div class="alert alert-success">
-                <?=$_SESSION['success'];unset($_SESSION['success']); ?>
             </div>
         <?php endif; ?>
         <label for="input" class="sr-only">Имя</label>

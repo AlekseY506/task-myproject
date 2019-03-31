@@ -3,7 +3,7 @@
 include_once 'libs/db_connect.php';
 include_once 'libs/functions.php';
 //если нет сессии
-if(auth() != false){
+if(auth()){
     header("Location: index.php");
     exit();
 }

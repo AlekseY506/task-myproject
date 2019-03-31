@@ -2,18 +2,16 @@
 
 require_once 'libs/delete.php';
 include_once 'libs/functions.php';
-if(auth() != false){
-    if (!isset($_GET['id'])){
-    header("Location: index.php");
-    exit();
+if(auth()){
+    if (empty($_GET['id'])){
+    redirect("index.php");
     }
 
 
     $id = htmlspecialchars(rtrim($_GET['id']));
     //delete($id);
     if (!is_numeric($id)){
-        header("Location: index.php");
-        exit();
+        redirect("index.php");
     }
     $sql = "DELETE FROM articles WHERE id=:id";
     $stmt = $pdo->prepare($sql);
@@ -21,5 +19,4 @@ if(auth() != false){
     header("Location: index.php");
     exit();
 }
-header("Location: login-form.php");
-exit();
+redirect("login-form.php");

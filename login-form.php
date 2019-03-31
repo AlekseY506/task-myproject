@@ -1,6 +1,6 @@
 <?php
-    include_once 'libs/auth.php';
-    if(auth() != false){
+    include_once 'libs/functions.php';
+    if(auth()){
         header("Location: index.php");
         exit();
     }
