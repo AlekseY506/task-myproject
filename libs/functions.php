@@ -1,10 +1,13 @@
 <?php
 
 function redirect($http = false){
-    $redirect = $http;
-    if ($redirect){
-        header("Location: $redirect");
+    if ($http){
+        $redirect = $http;
+    }else{
+        $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
     }
+    header("Location: $redirect");
+    exit();
 }
 
 function auth(){
@@ -37,8 +40,7 @@ function auth(){
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute([":hash" => $hash, ":salt" => $salt, ":email" => $result->email]);
                 //переадресовываем на главную
-                header("Location: index.php");
-                exit();
+                redirect("index.php");
             }
             return true;
         }
