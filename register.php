@@ -4,16 +4,14 @@ include_once 'libs/db_connect.php';
 include_once 'libs/functions.php';
 //если пользователь авторизирован
 if(auth()){
-    header("Location: index.php");
-    exit();
+    redirect("index.php");
 }
 //массив POST с данными отправленные пользователем
 $data = $_POST;
 //проверяем массив данных на пустоту
 if (empty($date) == ""){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 }
 
 //key дополнительная защита от подмены данных
@@ -34,8 +32,7 @@ foreach ($attribute as $key => $value){
 //если attribute[key] пуст
 if (($attribute['name'] == '') || ($attribute['email'] == '') || ($attribute['password'] == '')){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: register-form.php");
-    exit();
+    redirect("register-form.php");
 }
 //если емаил введен верно тогда
 if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
@@ -47,8 +44,7 @@ if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
     //если пользователь есть
     if ($user){
         $_SESSION['error'] = "Пользователь с таким email уже зарегистрирован";
-        header("Location: register-form.php");
-        exit();
+        redirect("register-form.php");
     }
     
     //формируем запрос
@@ -60,16 +56,13 @@ if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
     //если не получилось записать
     if (!$result){
         $_SESSION['error'] = "Ошибка, попробуйте позже";
-        header("Location: register-form.php");
-        exit();
+        redirect("register-form.php");
     }
     
     //создаем сессию с сообщением об успехе
     $_SESSION['success'] = "Вы успешно зарегистрировались теперь можете войти на сайт";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 } else {
     $_SESSION['error'] = "Email не соответствует формату";
-    header("Location: register-form.php");
-    exit();
+    redirect("register-form.php");
 }

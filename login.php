@@ -4,16 +4,14 @@ include_once 'libs/db_connect.php';
 include_once 'libs/functions.php';
 //если нет сессии
 if(auth()){
-    header("Location: index.php");
-    exit();
+    redirect("index.php");
 }
 //массив POST с данными отправленные пользователем
 $data = $_POST;
 //проверяем массив данных на пустоту
 if (empty($date) == ""){
     $_SESSION['error'] = "Пожалуйста заполните все поля";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 }
 
 //key дополнительная защита от подмены данных
@@ -35,8 +33,7 @@ foreach ($attribute as $key => $value){
 //если attribute[key] пуст
 if (($attribute['email'] == '') || ($attribute['password'] == '')){
     $_SESSION['error'] = "Вы пропустили поле для заполнения";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 }
 
 //если емаил введен верно тогда
@@ -65,24 +62,19 @@ if (filter_var($attribute['email'], FILTER_VALIDATE_EMAIL) !== false){
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute([":hash" => $hash, ":salt" => $salt, ":email" => $attribute['email']]);
                 //переадресовываем на главную
-                header("Location: index.php");
-                exit();
+                redirect("index.php");
             }
             //переадресовываем на главную
-            header("Location: index.php");
-            exit();
+            redirect("index.php");
         } else {
             $_SESSION['error'] = "Пользователь с таким Email или паролём не зарегистрирован";
-            header("Location: login-form.php");
-            exit();
+            redirect("login-form.php");
         }
     }else{
         $_SESSION['error'] = "Пользователь с таким Email или паролём не зарегистрирован";
-        header("Location: login-form.php");
-        exit();
+        redirect("login-form.php");
     }
 }else{
     $_SESSION['error'] = "Email не соответствует формату";
-    header("Location: login-form.php");
-    exit();
+    redirect("login-form.php");
 }

@@ -2,8 +2,7 @@
     include_once 'libs/db_connect.php';
     include_once 'libs/functions.php';
     if(!auth()):
-        header("Location: login-form.php");
-        exit();
+        redirect("login-form.php");
         else:
         $sql = "SELECT * FROM articles WHERE user_id=:user_id";
         $stmt = $pdo->prepare($sql);

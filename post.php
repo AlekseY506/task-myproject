@@ -18,14 +18,12 @@ foreach ($attribute as $key => $value){
 
 if ($attribute['title'] == ''){
     $_SESSION['error'] = "Отсутсквует описание заголовка";
-    header("Location: create-form.php");
-    exit();
+    redirect("create-form.php");
 }
 
 if ($attribute['description'] == ''){
     $_SESSION['error'] = "Отсутствует текст статьи";
-    header("Location: create-form.php");
-    exit();
+    redirect("create-form.php");
 }
 //фаил фото
 if(!empty($_FILES['img']['tmp_name'])){
@@ -36,14 +34,12 @@ if(!empty($_FILES['img']['tmp_name'])){
     //проверяем наличие ошибок
     if (!empty($_FILES['img']['error'])){
         $_SESSION['errors'] = "Произошла ошибка загрузки";
-        header("Location: create-form.php");
-        exit();
+        redirect("create-form.php");
     }
     //допустимый размер файла
     if ($f_size > 8 * 1024 * 1024){
         $_SESSION['errors'] = "Пожалуйста выберите фаил размером не более 8 мб.";
-        header("Location: create-form.php");
-        exit();
+        redirect("create-form.php");
     }
     
     if (empty($_FILES['img']['error']) == trye){
@@ -53,11 +49,9 @@ if(!empty($_FILES['img']['tmp_name'])){
         $result = $stmt->execute([':user_id' => $_SESSION['user_id'], ':title' => $attribute['title'], ':text' => $attribute['description'], ':images' => $f_name]);
             if (!$result){
                 $_SESSION['errors'] = "При добавлении записи произошла ошибка, пожалуйста попробуйте позже";
-                header("Location: create-form.php");
-                exit();
+                redirect("create-form.php");
             } else {
-                header("Location: index.php");
-                exit();
+                redirect("index.php");
             }
     }
 }else{
@@ -67,10 +61,8 @@ if(!empty($_FILES['img']['tmp_name'])){
     $result = $stmt->execute([':user_id' => $_SESSION['user_id'], ':title' => $attribute['title'], ':text' => $attribute['description'], ':images' => $f_name]);
     if (!$result){
         $_SESSION['errors'] = "При добавлении записи произошла ошибка, пожалуйста попробуйте позже";
-        header("Location: create-form.php");
-        exit();
+        redirect("create-form.php");
     } else {
-        header("Location: index.php");
-        exit();
+        redirect("index.php");
     }
 }

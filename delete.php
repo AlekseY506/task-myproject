@@ -1,6 +1,6 @@
 <?php
 
-require_once 'libs/delete.php';
+require_once 'libs/db_connect.php';
 include_once 'libs/functions.php';
 if(auth()){
     if (empty($_GET['id'])){
@@ -16,7 +16,6 @@ if(auth()){
     $sql = "DELETE FROM articles WHERE id=:id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $id]);
-    header("Location: index.php");
-    exit();
+    redirect("index.php");
 }
 redirect("login-form.php");

@@ -1,8 +1,7 @@
 <?php
     include_once 'libs/functions.php';
     if(auth()){
-        header("Location: index.php");
-        exit();
+        redirect("index.php");
     }
 ?>
 <!doctype html>
