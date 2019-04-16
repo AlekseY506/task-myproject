@@ -49,13 +49,8 @@ function auth(){
     return true;
 }
 
-//function delete($id){
-//    if (!is_numeric($id)){
-//    header("Location: index.php");
-//    exit();
-//    }
-//    $sql = "DELETE FROM articles WHERE id=:id";
-//    $stmt = $pdo->prepare($sql);
-//    $stmt->execute([':id' => $id]);
-//    return true;
-//}
+function debug($data){
+    echo "<pre>";
+    var_dump($data);
+    echo "</pre>";
+}

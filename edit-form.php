@@ -7,7 +7,7 @@ if(!auth()){
     redirect("index.php");
 }
 //если не передан id
-if (empty($_GET['id']) and !is_numeric($id)){
+if (empty($_GET['id']) && !is_numeric($id)){
     redirect("index.php");
 }
 
